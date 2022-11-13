@@ -26,8 +26,9 @@
                             @csrf
                             @method('DELETE')
 
-                            <a href="{{ route('movie.edit',$item->id) }}" class="btn btn-primary">Edit</a>
-                            <button class="btn btn-error">Delete</button>
+                            <a href="{{ route('movie.show',$item->id) }}" class="btn btn-primary">Show</a>
+                            <a href="{{ route('movie.edit',$item->id) }}" class="btn btn-warning">Edit</a>
+                            <button class="btn btn-error" onClick="return confirm('Are you sure you want to do this?')">Delete</button>
                         </form>
                     </td>
                 </tr>

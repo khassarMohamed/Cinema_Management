@@ -37,17 +37,18 @@ class MovieController extends Controller
     public function store(Request $request)
     {
         $movie = new Movie();
+        $file = $request->file('poster');
+        $ext = $file->extension();
+        $filename = time() . '.' . $ext;
+        $movie->poster = "posters/" . $filename;
         $movie->title = $request->title;
         $movie->director = $request->director;
         $movie->genre = $request->genre;
         $movie->des = $request->des;
-        $file = $request->file("poster");
-        $ext = $file->extension();
-        $filename = time() . '.' . $ext;
-        $movie->poster = "posters/" . $filename;
-        $file->move("posters", $filename);
+
+        $file->move("posters/", $filename);
         $movie->save();
-        return redirect('movies');
+        return redirect('movie');
     }
 
     /**
@@ -58,7 +59,8 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        //
+        $movie = Movie::find($id);
+        return view('movies.show', compact('movie'));
     }
 
     /**
@@ -87,13 +89,17 @@ class MovieController extends Controller
         $movie->director = $request->director;
         $movie->genre = $request->genre;
         $file = $request->file('poster');
-        $ext = $file->extension();
-        $filename = time() . '.' . $ext;
-        $movie->poster = "posters/" . $filename;
-        $file->move("posters/", $filename);
+        if (!empty($file)) {
+
+            $ext = $file->extension();
+            $filename = time() . '.' . $ext;
+            $movie->poster = "posters/" . $filename;
+            $file->move("posters/", $filename);
+        }
+
         $movie->des = $request->des;
         $movie->update();
-        return redirect('movies');
+        return redirect('movie');
     }
 
     /**
@@ -106,6 +112,6 @@ class MovieController extends Controller
     {
         $movie = Movie::find($id);
         $movie->delete();
-        return redirect('movies');
+        return redirect('movie');
     }
 }
